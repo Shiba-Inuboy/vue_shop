@@ -73,6 +73,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="getuserInfo(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -94,11 +95,11 @@
           <el-dialog
             title="添加用户"
             :visible.sync="dialogFormVisible"
-            @close="resetForm('adduserRef')"
             :close-on-click-modal='false'
              width="50%"
+             @close="resetForm('adduserRef')"
           >
-            <el-form :model="adduser" :rules="adduserrules" ref="adduserRef">
+            <el-form :model="adduser" :rules="adduserrules" ref="adduserRef" >
               <el-form-item
                 label="用户名称"
                 :label-width="formLabelWidth"
@@ -189,6 +190,32 @@
               >
             </div>
           </el-dialog>
+              <el-dialog
+      title="分配角色"
+      :visible.sync="userVisible"
+      width="50%"
+      @close="resetInfo"
+    >
+      <div>
+        <p>当前的用户: {{ userInfo.username }}</p>
+        <p>当前的角色: {{ userInfo.role_name }}</p>
+        <p> 分配新角色:
+      <el-select v-model="value" placeholder="请选择">
+    <el-option
+      v-for="item in userRightsList"
+      :key="item.id"
+      :label="item.roleName"
+      :value="item.id">
+    </el-option>
+  </el-select></p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="userVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -215,6 +242,10 @@ export default {
       }
     }
     return {
+      value: '',
+      userInfo: {},
+      userRightsList: [],
+      userVisible: false,
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
@@ -271,8 +302,39 @@ export default {
     this.getUsersList()
   },
   methods: {
+    async saveRoleInfo() {
+      if (!this.value) {
+        return this.$message.error('请选择要分配的角色')
+      }
+      const {
+        data: res,
+      } = await this.$http.put(`users/${this.userInfo.id}/role`, {
+        rid: this.value,
+      })
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.getUsersList()
+      this.userVisible = false
+    },
+    resetInfo() {
+      this.value = ''
+      this.userRightsList = []
+    },
+    // 获取角色信息
+    async getuserInfo(userInfo) {
+      // console.log(userInfo);
+      this.userInfo = userInfo
+      this.getRightsList()
+      this.userVisible = true
+    },
+    // 获取角色列表
+    async getRightsList() {
+      const { data: res } = await this.$http('roles')
+      if (res.meta.status !== 200) return
+      this.userRightsList = res.data
+    },
     //重置修改
-    resetForm(formName){
+    resetForm(formName) {
       this.$ref[formName].resetFields()
     },
     // 根据id获取数据
@@ -290,8 +352,8 @@ export default {
         const { data: res } = await this.$http.put(
           `users/${this.edituser.id}`,
           {
-            email:this.edituser.email,
-            mobile:this.edituser.mobile
+            email: this.edituser.email,
+            mobile: this.edituser.mobile,
           }
         )
         // console.log(res)
@@ -304,15 +366,19 @@ export default {
     //删除用户
     async delUser(item) {
       // 询问用户是否删除
-       const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除该用户, 是否继续?',
+        '提示',
+        {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
-        }).catch(error=>error)
-        // 如果用户确认删除 返回值为字符串confirm
-        // 如果用户取消删除 返回值为字符串cancel
+          type: 'warning',
+        }
+      ).catch((error) => error)
+      // 如果用户确认删除 返回值为字符串confirm
+      // 如果用户取消删除 返回值为字符串cancel
       // console.log(confirmResult);
-      if(confirmResult !== 'confirm') return this.$message.info('已取消删除')
+      if (confirmResult !== 'confirm') return this.$message.info('已取消删除')
       const { data: res } = await this.$http.delete(`users/${item.id}`)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.$message.success(res.meta.msg)
