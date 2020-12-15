@@ -315,7 +315,9 @@ export default {
           `roles/${this.editrolesList.roleId}`,
           {
             roleName: this.editrolesList.roleName,
-            roleDesc: this.editrolesList.roleDesc,
+            roleDesc: this.editrolesList.roleDesc
+              ? this.editrolesList.roleDesc
+              : ' ',
           }
         )
         // console.log(res)
@@ -331,10 +333,11 @@ export default {
       // console.log(res)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.editrolesList = res.data
+      this.editrolesList.roleDesc === ' '
+        ? (this.editrolesList.roleDesc = '')
+        : this.editrolesList.roleDesc
       this.editRolesVisible = true
     },
-    //   编辑角色列表
-    editRoles() {},
     //   重置添加角色表单
     resetRoles(item) {
       this.$refs[item].resetFields()
