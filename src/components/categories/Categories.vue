@@ -94,7 +94,6 @@
             :options="parentCateList"
             :props="cascaderProps"
             @change="parentCateChange"
-            change-on-select
             clearable
           ></el-cascader>
         </el-form-item>
@@ -142,6 +141,7 @@ export default {
         label: 'cat_name',
         children: 'children',
         expandTrigger: 'hover',
+        checkStrictly : true
       },
       //父级分类的列表
       parentCateList: [],
