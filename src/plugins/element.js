@@ -4,20 +4,20 @@ import Vue from 'vue'
 // import { Input } from 'element-ui'
 // // 导入弹框提示
 // import { Message } from 'element-ui'
-import { 
+import {
     Message,
-    Button, 
-    Form, 
-    FormItem, 
-    Input, 
-    Container, 
-    Header, 
-    Aside, 
-    Main, 
-    menu, 
-    submenu, 
-    menuItem, 
-    Breadcrumb, 
+    Button,
+    Form,
+    FormItem,
+    Input,
+    Container,
+    Header,
+    Aside,
+    Main,
+    menu,
+    submenu,
+    menuItem,
+    Breadcrumb,
     BreadcrumbItem,
     Card,
     Row,
@@ -36,8 +36,13 @@ import {
     Cascader,
     Alert,
     Tabs,
-    TabPane
- } from 'element-ui'
+    TabPane,
+    Step,
+    Steps,
+    CheckboxGroup,
+    Checkbox,
+    Upload
+} from 'element-ui'
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
@@ -68,6 +73,11 @@ Vue.use(Cascader);
 Vue.use(Alert);
 Vue.use(Tabs);
 Vue.use(TabPane);
+Vue.use(Step);
+Vue.use(Steps);
+Vue.use(CheckboxGroup);
+Vue.use(Checkbox);
+Vue.use(Upload);
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm;
 

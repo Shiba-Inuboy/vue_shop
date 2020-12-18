@@ -19,3 +19,9 @@ html,body,#app{
  .el-cascader-panel{ 
      height: 200px; 
  }
+ .el-steps {
+  margin: 20px 0;
+}
+.ql-editor{
+    min-height: 200px;
+}
