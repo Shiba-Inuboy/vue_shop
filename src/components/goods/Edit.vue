@@ -224,7 +224,7 @@ export default {
       })
     },
     handlePreview(file) {
-      this.previewdialogVisible = true
+      this.previewVisible = true
       this.imgURL = file.response.data.url
     },
     handleRemove(file) {
